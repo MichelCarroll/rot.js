@@ -2591,7 +2591,7 @@ ROT.Map.Digger = function(width, height, options) {
 		roomHeight: [3, 5], /* room minimum and maximum height */
 		corridorLength: [3, 10], /* corridor minimum and maximum length */
 		dugPercentage: 0.2, /* we stop after this percentage of level area has been dug out */
-		timeLimit: 1000 /* we stop after this much time has passed (msec) */
+        cycleLimit: 1000 /* we stop after this many cycles has passed */
 	}
 	for (var p in options) { this._options[p] = options[p]; }
 	
@@ -2622,12 +2622,11 @@ ROT.Map.Digger.prototype.create = function(callback) {
 	var area = (this._width-2) * (this._height-2);
 
 	this._firstRoom();
-	
-	var t1 = Date.now();
+
+    var cycles = 0;
 
 	do {
-		var t2 = Date.now();
-		if (t2 - t1 > this._options.timeLimit) { break; }
+        if (cycles++ > this._options.cycleLimit) { break; }
 
 		/* find a good wall */
 		var wall = this._findWall();
